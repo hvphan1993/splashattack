@@ -5,6 +5,8 @@ const c = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
+const scoreEl = document.querySelector("#scoreEl");
+
 class Player {
   constructor(x, y, radius, color) {
     this.x = x;
@@ -68,7 +70,7 @@ class Enemy {
   }
 }
 
-const friction = 0.99
+const friction = 0.99;
 
 class Particle {
   constructor(x, y, radius, color, velocity) {
@@ -142,6 +144,7 @@ function spawnEnemies() {
 }
 
 let animationId;
+let score = 0;
 function animate() {
   animationId = requestAnimationFrame(animate);
   c.fillStyle = "rgba(0, 0, 0, 0.1)";
@@ -185,20 +188,31 @@ function animate() {
 
       // when projectiles touch enemy
       if (dist - enemy.radius - projectile.radius < 1) {
+        // increase score
+        score += 100;
+        scoreEl.innerHTML = score;
+
         // create explosions
-        for (let i = 0; i < enemy.radius * 2; i++) {
+        for (let i = 0; i < enemy.radius * 1.75; i++) {
           particles.push(
             new Particle(
               projectile.x,
               projectile.y,
               Math.random() * 2,
               enemy.color,
-              { x: (Math.random() - 0.5) * (Math.random() * 6), y: (Math.random() - 0.5) * (Math.random() * 6)}
+              {
+                x: (Math.random() - 0.5) * (Math.random() * 6),
+                y: (Math.random() - 0.5) * (Math.random() * 6),
+              }
             )
           );
         }
 
-        if (enemy.radius - 10 > 5) {
+        if (enemy.radius - 10 > 7) {
+          // increase score
+          score += 100;
+          scoreEl.innerHTML = score;
+
           gsap.to(enemy, {
             radius: enemy.radius - 10,
           });
@@ -206,6 +220,9 @@ function animate() {
             projectiles.splice(projectileIndex, 1);
           }, 0);
         } else {
+          // remove from scene altogether
+          score += 250;
+          scoreEl.innerHTML = score;
           setTimeout(() => {
             enemies.splice(index, 1);
             projectiles.splice(projectileIndex, 1);
