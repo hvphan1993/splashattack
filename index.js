@@ -7,6 +7,10 @@ canvas.height = innerHeight;
 
 const scoreEl = document.querySelector("#scoreEl");
 
+const startGameBtn = document.querySelector("#startGameBtn");
+const modalEl = document.querySelector("#modalEl");
+const bigScoreEl = document.querySelector("#bigScoreEl");
+
 class Player {
   constructor(x, y, radius, color) {
     this.x = x;
@@ -105,14 +109,23 @@ class Particle {
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 
-const player = new Player(x, y, 10, "white");
-player.draw();
+// player.draw();
 
 // for future if enable player to move here is where to modify where projectiles start from
+let player = new Player(x, y, 10, "white");
+let projectiles = [];
+let enemies = [];
+let particles = [];
 
-const projectiles = [];
-const enemies = [];
-const particles = [];
+function init() {
+  player = new Player(x, y, 10, "white");
+  projectiles = [];
+  enemies = [];
+  particles = [];
+  score = 0;
+  scoreEl.innerHTML = score;
+  bigScoreEl.innerHTML = score;
+}
 
 function spawnEnemies() {
   setInterval(() => {
@@ -181,6 +194,8 @@ function animate() {
     // end game
     if (dist - enemy.radius - player.radius < 1) {
       cancelAnimationFrame(animationId);
+      modalEl.style.display = "flex";
+      bigScoreEl.innerHTML = score;
     }
 
     projectiles.forEach((projectile, projectileIndex) => {
@@ -210,7 +225,7 @@ function animate() {
 
         if (enemy.radius - 10 > 7) {
           // increase score
-          score += 100;
+          score += 50;
           scoreEl.innerHTML = score;
 
           gsap.to(enemy, {
@@ -221,7 +236,7 @@ function animate() {
           }, 0);
         } else {
           // remove from scene altogether
-          score += 250;
+          score += 100;
           scoreEl.innerHTML = score;
           setTimeout(() => {
             enemies.splice(index, 1);
@@ -249,5 +264,9 @@ addEventListener("click", (event) => {
   );
 });
 
-animate();
-spawnEnemies();
+startGameBtn.addEventListener("click", () => {
+  init();
+  animate();
+  spawnEnemies();
+  modalEl.style.display = "none";
+});
