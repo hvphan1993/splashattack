@@ -12,7 +12,7 @@ git clone https://github.com/hvphan1993/splashattack.git
 - Seems a bit slow on Chrome, Firefox works best so far.
 
 Alternatively
-- Access game and play by clicking [Here!](https://hvphan1993.github.io/)
+- Access game and play by clicking [Here!](https://hvphan1993.github.io/splashattack/)
 
 ## Built With
 - JavaScript
